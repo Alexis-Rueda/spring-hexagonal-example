@@ -1,8 +1,6 @@
 package com.rueda.todo_hexagonal.infrastructure.adapter.in.rest;
 
-import com.rueda.todo_hexagonal.application.port.in.CreateTaskUseCase;
-import com.rueda.todo_hexagonal.application.port.in.GetTaskUseCase;
-import com.rueda.todo_hexagonal.application.port.in.ListTasksUseCase;
+import com.rueda.todo_hexagonal.application.port.in.*;
 import com.rueda.todo_hexagonal.domain.model.Task;
 import com.rueda.todo_hexagonal.infrastructure.adapter.in.rest.dto.CreateTaskRequest;
 import com.rueda.todo_hexagonal.infrastructure.adapter.in.rest.dto.TaskResponse;
@@ -22,6 +20,8 @@ public class TaskController {
     private final CreateTaskUseCase createTaskUseCase;
     private final ListTasksUseCase listTasksUseCase;
     private final GetTaskUseCase getTaskUseCase;
+    private final CompleteTaskUseCase completeTaskUseCase;
+    private final ReopenTaskUseCase reopenTaskUseCase;
 
     @PostMapping
     public ResponseEntity<TaskResponse> create(@Valid @RequestBody CreateTaskRequest request){
@@ -49,4 +49,18 @@ public class TaskController {
         Task task = getTaskUseCase.getById(id);
         return ResponseEntity.ok(TaskResponse.from(task));
     }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<TaskResponse> complete(@PathVariable Long id){
+        Task task = completeTaskUseCase.complete(id);
+        return ResponseEntity.ok(TaskResponse.from(task));
+    }
+
+    @PatchMapping("/{id}/reopen")
+    public ResponseEntity<TaskResponse> reopen(@PathVariable Long id){
+        Task task = reopenTaskUseCase.reopen(id);
+        return ResponseEntity.ok(TaskResponse.from(task));
+    }
+
+
 }

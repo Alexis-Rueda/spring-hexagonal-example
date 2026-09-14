@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,5 +38,12 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
     public Optional<Task> findById(Long id) {
         return springDataTaskRepository.findById(id)
                 .map(mapper::toDomain);
+    }
+
+    @Override
+    public Task update(Task task) {
+        TaskJpaEntity entity = mapper.toJpaEntity(task);
+        TaskJpaEntity updated = springDataTaskRepository.save(entity);
+        return mapper.toDomain(updated);
     }
 }
