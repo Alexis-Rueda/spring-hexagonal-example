@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         problem.setTitle("Tarea no encontrada");
         return problem;
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationErrors(MethodArgumentNotValidException ex) {
 
@@ -36,4 +37,16 @@ public class GlobalExceptionHandler {
         problem.setProperty("errors", errors);
         return problem;
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ProblemDetail handleIllegalState(IllegalStateException ex){
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT, ex.getMessage()
+        );
+
+        problemDetail.setTitle("Operación inválida");
+        return problemDetail;
+    }
+
 }
